@@ -33,7 +33,7 @@ router.post('/users/check', async (req, res) => {
       req.body.email,
       req.body.passcode
     );
-    const token = await user.generateAuthToken();
+    // const token = await user.generateAuthToken();
   } catch (e) {
     res.status(400).send();
   }
