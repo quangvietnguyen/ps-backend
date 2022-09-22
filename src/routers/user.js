@@ -2,25 +2,29 @@ const express = require('express');
 const User = require('../models/user');
 const router = new express.Router();
 
-router.post('/users/create', async (req, res) => {
+router.post('/user/create', async (req, res) => {
   const user = new User(req.body);
-  try {
-    await user.save();
-    res.status(201).send({ user });
-  } catch (e) {
-    res.status(400).send();
-  }
+  const usr = await User.findByCredentials(req.body.email, req.body.passcode);
+  if (!usr) {
+    try {
+      // user && res.status(200).send({ user });
+      await user.save();
+      res.status(201).send({ user });
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  } else res.status(401).send('User is already existed');
 });
 
-router.post('/users/check', async (req, res) => {
+router.post('/user/check', async (req, res) => {
   try {
     const user = await User.findByCredentials(
       req.body.email,
       req.body.passcode
     );
-    user && res.status(200).send();
+    user && res.status(200).send({ user });
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
