@@ -21,20 +21,10 @@ router.post('/user/check', async (req, res) => {
       req.body.email,
       req.body.passcode
     );
-    user && res.status(200).send({ user });
+    if (user) return res.status(200).send('User found');
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send('User not found');
   }
 });
-
-// router.post('/users/logoutAll', auth, async (req, res) => {
-//   try {
-//     req.user.tokens = [];
-//     await req.user.save();
-//     res.send();
-//   } catch (e) {
-//     res.status(500).send();
-//   }
-// });
 
 module.exports = router;
