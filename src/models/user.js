@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: 7,
       validate(value) {
-        if (value.toLowerCase().includes('password')) {
-          throw new Error('Password cannot contain "password"');
+        if (value.toLowerCase().includes('passcode')) {
+          throw new Error('Passcode cannot contain "passcode"');
         }
       },
     },
@@ -50,10 +50,18 @@ userSchema.methods.toJSON = function () {
   return userObject;
 };
 
+userSchema.statics.findByEmail = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    return;
+  }
+  return user;
+};
+
 userSchema.statics.findByCredentials = async (email, passcode) => {
   const user = await User.findOne({ email });
-  if (user) {
-    throw new Error('User is already existed');
+  if (!user) {
+    throw new Error('User does not exist');
   } else {
     const isMatch = await bcrypt.compare(passcode, user.passcode);
     if (!isMatch) {
