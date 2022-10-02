@@ -70,7 +70,7 @@ userSchema.statics.findByCredentials = async (email, passcode) => {
   } else {
     const isMatch = await bcrypt.compare(passcode, user.passcode);
     if (!isMatch) {
-      return null;
+      return;
     }
   }
   return user;

@@ -25,6 +25,24 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
+commentSchema.methods.generateToken = async function () {
+  const comment = this;
+  const token = jwt.sign(
+    { _id: comment._id.toString() },
+    process.env.JWT_SECRET
+  );
+  comment.token = token;
+  await comment.save();
+  return token;
+};
+
+commentSchema.statics.findByPost = async (post) => {
+  const comments = await Comment.find({ post });
+  if (!comments) {
+    return;
+  } else return comments;
+};
+
 const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;
