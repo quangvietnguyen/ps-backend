@@ -101,7 +101,7 @@ router.put('/comment/:id', async (req, res) => {
       } else res.status(404).send('Comment not found!');
     } else res.status(404).send('User not found!');
   } catch (e) {
-    res.status(404).send(e);
+    res.status(400).send(e);
   }
 });
 
@@ -112,11 +112,16 @@ router.delete('/comment/:id', async (req, res) => {
       req.body.passcode
     );
     if (user) {
-      await user.remove();
-      res.status(200).send('User deleted');
-    }
+      const comment = await Comment.findById(req.params.id);
+      if (comment) {
+        await comment.remove();
+        res.status(200).send('Comment deleted!');
+      } else {
+        res.status(404).send('Comment not found!');
+      }
+    } else res.status(404).send('User not found!');
   } catch (e) {
-    res.status(400).send('User not found');
+    res.status(400).send(e);
   }
 });
 
