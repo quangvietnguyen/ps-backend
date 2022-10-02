@@ -22,8 +22,13 @@ router.get('/comment/:token', async (req, res) => {
 });
 
 router.post('/comment/create', async (req, res) => {
-  const user = new User(req.body);
+  const user = new User(req.body.name, req.body.email, req.body.passcode);
   const usr = await User.findByEmail(req.body.email);
+  const credential = await User.findByCredentials(
+    req.body.email,
+    req.body.passcode
+  );
+  console.log(credential);
   if (!usr) {
     try {
       await user.save();
@@ -31,7 +36,10 @@ router.post('/comment/create', async (req, res) => {
     } catch (e) {
       res.status(400).send(e);
     }
-  } else res.status(401).send('User is already existed');
+  } else {
+    if (credential) res.status(201).send('User matched!');
+    else res.status(400).send('User did not match!');
+  }
 });
 
 router.put('/comment/update', async (req, res) => {
