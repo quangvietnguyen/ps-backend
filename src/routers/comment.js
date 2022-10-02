@@ -4,9 +4,22 @@ const User = require('../models/user');
 const Comment = require('../models/comment');
 const router = new express.Router();
 
+router.get('/user', async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.passcode
+    );
+    if (user) {
+      res.status(200).send(user);
+    } else res.status(404).send('No comment found!');
+  } catch (e) {
+    res.status(401).send(e);
+  }
+});
+
 router.get('/comments/:post', async (req, res) => {
   try {
-    console.log(req.params.post);
     const comment = await Comment.findByPost(req.params.post);
     if (comment) {
       res.status(200).send(comment);
@@ -16,12 +29,14 @@ router.get('/comments/:post', async (req, res) => {
   }
 });
 
-router.get('/comment/:token', async (req, res) => {
+router.get('/comment/:id', async (req, res) => {
   try {
-    const comment = await Comment.find({ token: req.params.token });
-    res.status(200).send(comment);
+    const comment = await Comment.findById(req.params.id);
+    if (comment) {
+      res.status(200).send(comment);
+    } else res.status(404).send('No comment found!');
   } catch (e) {
-    res.status(500).send(e);
+    res.status(401).send(e);
   }
 });
 
@@ -42,7 +57,7 @@ router.post('/comment/create', async (req, res) => {
           post: req.body.post,
           comment: req.body.comment,
         });
-        comment.save(function (err, comment) {
+        comment.save(function (err) {
           if (err) return res.status(401).send(err);
         });
       });
@@ -71,19 +86,26 @@ router.post('/comment/create', async (req, res) => {
   }
 });
 
-router.put('/comment/update', async (req, res) => {
+router.put('/comment/:id', async (req, res) => {
   try {
     const user = await User.findByCredentials(
       req.body.email,
       req.body.passcode
     );
-    if (user) return res.status(200).send('User found');
+    if (user) {
+      const comment = await Comment.findById(req.params.id);
+      if (comment) {
+        comment.comment = req.body.comment;
+        await comment.save();
+        res.status(200).send('Comment updated!');
+      } else res.status(404).send('Comment not found!');
+    } else res.status(404).send('User not found!');
   } catch (e) {
-    res.status(404).send('User not found');
+    res.status(404).send(e);
   }
 });
 
-router.post('/comment/delete', async (req, res) => {
+router.delete('/comment/:id', async (req, res) => {
   try {
     const user = await User.findByCredentials(
       req.body.email,

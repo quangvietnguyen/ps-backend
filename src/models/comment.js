@@ -43,6 +43,13 @@ commentSchema.statics.findByPost = async (post) => {
   } else return comments;
 };
 
+commentSchema.statics.findById = async (id) => {
+  const comment = await Comment.findOne({ _id: id });
+  if (!comment) {
+    return;
+  } else return comment;
+};
+
 const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;
