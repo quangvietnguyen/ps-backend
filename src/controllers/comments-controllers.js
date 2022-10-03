@@ -7,7 +7,7 @@ const getComments = async (req, res, next) => {
     const comment = await Comment.findByPost(req.params.post);
     if (comment) {
       res.status(200).send(comment);
-    } else res.status(404).send('No comment found!');
+    } else res.status(404).send('No comment found.');
   } catch (e) {
     res.status(401).send(e);
   }
@@ -18,7 +18,7 @@ const getComment = async (req, res, next) => {
     const comment = await Comment.findById(req.params.id);
     if (comment) {
       res.status(200).send(comment);
-    } else res.status(404).send('No comment found!');
+    } else res.status(404).send('No comment found.');
   } catch (e) {
     res.status(401).send(e);
   }
@@ -45,7 +45,7 @@ const createComment = async (req, res, next) => {
           if (err) return res.status(401).send(err);
         });
       });
-      res.status(201).send('User and comment created!');
+      res.status(201).send('User and comment created.');
     } catch (e) {
       res.status(400).send(e);
     }
@@ -62,8 +62,8 @@ const createComment = async (req, res, next) => {
           comment: req.body.comment,
         });
         await comment.save();
-        res.status(201).send('User matched and comment created!');
-      } else res.status(404).send('User did not match!');
+        res.status(201).send('User matched and comment created.');
+      } else res.status(404).send('User did not match.');
     } catch (e) {
       res.status(400).send(e);
     }
@@ -81,9 +81,9 @@ const updateComment = async (req, res, next) => {
       if (comment && comment.user === user._id) {
         comment.comment = req.body.comment;
         await comment.save();
-        res.status(200).send('Comment updated!');
-      } else res.status(404).send('Comment not found!');
-    } else res.status(404).send('User not found!');
+        res.status(200).send('Comment updated.');
+      } else res.status(404).send('Comment not found.');
+    } else res.status(404).send('User not found.');
   } catch (e) {
     res.status(400).send(e);
   }
@@ -99,11 +99,11 @@ const deleteComment = async (req, res, next) => {
       const comment = await Comment.findById(req.params.id);
       if (comment && comment.user === user._id) {
         await comment.remove();
-        res.status(200).send('Comment deleted!');
+        res.status(200).send('Comment deleted.');
       } else {
-        res.status(404).send('Comment not found!');
+        res.status(404).send('Comment not found.');
       }
-    } else res.status(404).send('User not found!');
+    } else res.status(404).send('User not found.');
   } catch (e) {
     res.status(400).send(e);
   }
