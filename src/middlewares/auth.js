@@ -1,23 +1,21 @@
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const HttpError = require('../models/http-error');
 
-const auth = async (req, res, next) => {
+module.exports = async (req, res, next) => {
+  if (!req.body) {
+    return next();
+  }
   try {
-    const token = req.header('Authorization').replace('Bearer ', '');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({
-      _id: decoded._id,
-      'tokens.token': token,
-    });
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.passcode
+    );
     if (!user) {
-      throw new Error();
+      throw new Error('Authentication failed!');
     }
-    req.user = user;
-    req.token = token;
     next();
-  } catch (e) {
-    res.status(401).send({ error: 'Please authenticate.' });
+  } catch (err) {
+    const error = new HttpError('Authentication failed!', 401);
+    return next(error);
   }
 };
-
-module.exports = auth;

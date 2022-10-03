@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 const { Schema } = mongoose;
 
 const commentSchema = new mongoose.Schema(
@@ -21,20 +20,9 @@ const commentSchema = new mongoose.Schema(
     },
   },
   {
-    timpestamp: true,
+    timestamp: true,
   }
 );
-
-commentSchema.methods.generateToken = async function () {
-  const comment = this;
-  const token = jwt.sign(
-    { _id: comment._id.toString() },
-    process.env.JWT_SECRET
-  );
-  comment.token = token;
-  await comment.save();
-  return token;
-};
 
 commentSchema.statics.findByPost = async (post) => {
   const comments = await Comment.find({ post });
