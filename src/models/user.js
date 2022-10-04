@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
     ],
   },
   {
-    timestamp: true,
+    timestamps: true,
   }
 );
 
@@ -43,6 +43,14 @@ userSchema.methods.toJSON = function () {
   const userObject = user.toObject();
   delete userObject.passcode;
   return userObject;
+};
+
+userSchema.statics.findById = async (id) => {
+  const user = await User.findOne({ id });
+  if (!user) {
+    return;
+  }
+  return user;
 };
 
 userSchema.statics.findByEmail = async (email) => {

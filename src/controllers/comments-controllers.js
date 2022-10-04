@@ -4,9 +4,9 @@ const Comment = require('../models/comment');
 
 const getComments = async (req, res, next) => {
   try {
-    const comment = await Comment.findByPost(req.params.post);
-    if (comment) {
-      res.status(200).send(comment);
+    const comments = await Comment.findByPost(req.params.post);
+    if (comments) {
+      res.status(200).send(comments);
     } else res.status(404).send('No comment found.');
   } catch (e) {
     res.status(401).send(e);
@@ -17,6 +17,7 @@ const getComment = async (req, res, next) => {
   try {
     const comment = await Comment.findById(req.params.id);
     if (comment) {
+      console.log(comment.createAt);
       res.status(200).send(comment);
     } else res.status(404).send('No comment found.');
   } catch (e) {

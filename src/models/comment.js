@@ -20,12 +20,12 @@ const commentSchema = new mongoose.Schema(
     },
   },
   {
-    timestamp: true,
+    timestamps: true,
   }
 );
 
 commentSchema.statics.findByPost = async (post) => {
-  const comments = await Comment.find({ post });
+  const comments = await Comment.find({ post }).populate('user', ['name']);
   if (!comments) {
     return;
   } else return comments;
