@@ -26,48 +26,48 @@ const getComment = async (req, res, next) => {
 };
 
 const createComment = async (req, res, next) => {
-  const user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    email: req.body.email,
-    passcode: req.body.passcode,
-  });
-  const usr = await User.findByEmail(req.body.email);
-  if (!usr) {
-    try {
-      user.save(function (err, user) {
+  try {
+    const usr = await User.findByEmail(req.body.email);
+    if (!usr) {
+      const user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        email: req.body.email,
+        passcode: req.body.passcode,
+      });
+      user.save(function (err) {
         if (err) return res.status(401).send(err);
         const comment = new Comment({
+          _id: new mongoose.Types.ObjectId(),
           user: user._id,
           post: req.body.post,
           comment: req.body.comment,
         });
         comment.save(function (err) {
-          if (err) return res.status(401).send(err);
+          if (err) return console.log(err);
+          res.status(201).send('User and comment created.');
         });
       });
-      res.status(201).send('User and comment created.');
-    } catch (e) {
-      res.status(400).send(e);
-    }
-  } else {
-    try {
+    } else {
       const credential = await User.findByCredentials(
-        usr.email,
+        req.body.email,
         req.body.passcode
       );
       if (credential) {
         const comment = new Comment({
+          _id: new mongoose.Types.ObjectId(),
           user: credential._id,
           post: req.body.post,
           comment: req.body.comment,
         });
-        await comment.save();
-        res.status(201).send('User matched and comment created.');
-      } else res.status(404).send('User did not match.');
-    } catch (e) {
-      res.status(400).send(e);
+        comment.save(function (err) {
+          if (err) return res.status(401).send(err);
+          res.status(201).send('User matched and comment created.');
+        });
+      } else res.status(401).send('Unauthorized user.');
     }
+  } catch (e) {
+    res.status(400).send(e);
   }
 };
 
@@ -98,9 +98,12 @@ const deleteComment = async (req, res, next) => {
     );
     if (user) {
       const comment = await Comment.findById(req.params.id);
-      if (comment && comment.user === user._id) {
-        await comment.remove();
-        res.status(200).send('Comment deleted.');
+      console.log(req.params.id);
+      if (comment && comment.user.equals(user._id)) {
+        comment.remove(function (err) {
+          if (err) return res.status(401).send(err);
+          res.status(200).send('Comment deleted.');
+        });
       } else {
         res.status(404).send('Comment not found.');
       }
