@@ -98,7 +98,6 @@ const deleteComment = async (req, res, next) => {
     );
     if (user) {
       const comment = await Comment.findById(req.params.id);
-      console.log(req.params.id);
       if (comment && comment.user.equals(user._id)) {
         comment.remove(function (err) {
           if (err) return res.status(401).send(err);
@@ -109,7 +108,7 @@ const deleteComment = async (req, res, next) => {
       }
     } else res.status(404).send('User not found.');
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send({ request: req.body, error: e });
   }
 };
 
