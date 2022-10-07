@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { Schema } = mongoose;
+const dotenv = require('dotenv');
+dotenv.config();
 
 const userSchema = new mongoose.Schema(
   {
