@@ -17,7 +17,6 @@ const getComment = async (req, res, next) => {
   try {
     const comment = await Comment.findById(req.params.id);
     if (comment) {
-      console.log(comment.createAt);
       res.status(200).send(comment);
     } else res.status(404).send('No comment found.');
   } catch (e) {
