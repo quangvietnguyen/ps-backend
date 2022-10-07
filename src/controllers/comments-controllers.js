@@ -43,7 +43,7 @@ const createComment = async (req, res, next) => {
           comment: req.body.comment,
         });
         comment.save(function (err) {
-          if (err) return console.log(err);
+          if (err) return res.send(401).send(err);
           res.status(201).send('User and comment created.');
         });
       });
