@@ -1,6 +1,6 @@
 const express = require('express');
 require('./db/mongoose');
-// const cors = require('cors');
+const cors = require('cors');
 const commentRouter = require('./routers/comment');
 const validator = require('./middlewares/validator');
 const cors = require('.middlewares/cors');
@@ -8,8 +8,8 @@ const cors = require('.middlewares/cors');
 const app = express();
 const port = process.env.PORT;
 
-// app.use(cors());
-app.use(cors);
+app.use(cors());
+// app.use(cors);
 app.use(express.json());
 app.use(validator);
 app.use(commentRouter);
