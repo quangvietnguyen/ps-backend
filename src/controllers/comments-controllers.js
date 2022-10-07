@@ -79,11 +79,19 @@ const updateComment = async (req, res, next) => {
     );
     if (user) {
       const comment = await Comment.findById(req.params.id);
-      if (comment && comment.user === user._id) {
+      if (comment && comment.user.equals(user._id)) {
         comment.comment = req.body.comment;
-        await comment.save();
-        res.status(200).send('Comment updated.');
-      } else res.status(404).send('Comment not found.');
+        if (req.body.name) user.name = req.body.name;
+        comment.save(function (err) {
+          if (err) return res.status(401).send(err);
+          user.save(function (err) {
+            if (err) return res.status(401).send(err);
+            res.status(200).send('Comment updated.');
+          });
+        });
+      } else {
+        res.status(404).send('Comment not found.');
+      }
     } else res.status(404).send('User not found.');
   } catch (e) {
     res.status(400).send(e);
@@ -108,7 +116,7 @@ const deleteComment = async (req, res, next) => {
       }
     } else res.status(404).send('User not found.');
   } catch (e) {
-    res.status(400).send({ request: req.body, error: e });
+    res.status(400).send(e);
   }
 };
 
