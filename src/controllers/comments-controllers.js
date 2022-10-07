@@ -3,7 +3,6 @@ const User = require('../models/user');
 const Comment = require('../models/comment');
 
 const getComments = async (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   try {
     const comments = await Comment.findByPost(req.params.post);
     if (comments) {
@@ -15,7 +14,6 @@ const getComments = async (req, res, next) => {
 };
 
 const getComment = async (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   try {
     const comment = await Comment.findById(req.params.id);
     if (comment) {
@@ -27,7 +25,6 @@ const getComment = async (req, res, next) => {
 };
 
 const createComment = async (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   try {
     const usr = await User.findByEmail(req.body.email);
     if (!usr) {
@@ -74,7 +71,6 @@ const createComment = async (req, res, next) => {
 };
 
 const updateComment = async (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   try {
     const user = await User.findByCredentials(
       req.body.email,
@@ -102,7 +98,6 @@ const updateComment = async (req, res, next) => {
 };
 
 const deleteComment = async (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   try {
     const user = await User.findByCredentials(
       req.body.email,
