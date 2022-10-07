@@ -5,7 +5,7 @@ const commentRouter = require('./routers/comment');
 const validator = require('./middlewares/validator');
 
 const app = express();
-const port = process.env.PORT || port;
+const port = process.env.PORT;
 
 // app.use(cors());
 app.use(express.json());
