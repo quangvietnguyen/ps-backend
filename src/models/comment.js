@@ -19,6 +19,22 @@ const commentSchema = new mongoose.Schema(
       minlength: 1,
       maxlength: 1000,
     },
+    likes: {
+      type: Number,
+      default: 0,
+    },
+    dislikes: {
+      type: Number,
+      default: 0,
+    },
+    loves: {
+      type: Number,
+      default: 0,
+    },
+    lols: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
