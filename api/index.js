@@ -1,8 +1,8 @@
 const express = require('express');
-require('./db/mongoose');
+require('../src/db/mongoose');
 const cors = require('cors');
-const commentRouter = require('./routers/comment');
-const validator = require('./middlewares/validator');
+const commentRouter = require('../src/routers/comment');
+const validator = require('../src/middlewares/validator');
 // const cors = require('./middlewares/cors');
 
 const app = express();
