@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
-    "deploy": "git push heroku main",
+    "dev": "env-cmd -f ./config/dev.env nodemon api/index.js",
+    "preview": "vercel",
+    "deploy": "vercel --prod",
     "deepclean": "rm -rf node_modules package-lock.json"
   },
   "author": "Quang Viet, Nguyen",
